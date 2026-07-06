@@ -1,14 +1,14 @@
 /* ===== Variables ===== */
 :root {
-  --color-sage: #7a8b6c;
-  --color-sage-dark: #5c6b52;
-  --color-sage-light: #8f9f82;
+  --color-sage: #b4df1c;
+  --color-sage-dark: #b4df1c;
+  --color-sage-light: #f56505;
   --color-cream: #f5f0e8;
   --color-cream-dark: #e8dfd3;
-  --color-dark: #2c3328;
+  --color-dark: #ff8800;
   --color-white: #ffffff;
-  --color-text: #3d4538;
-  --color-text-light: #6b7562;
+  --color-text: #c8ff00;
+  --color-text-light: #ff4800;
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Montserrat', sans-serif;
   --font-script: 'Great Vibes', cursive;
