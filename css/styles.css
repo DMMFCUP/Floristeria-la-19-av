@@ -209,26 +209,77 @@ ul {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-sage-dark);
+  background-color: #f8dbe1;
   text-align: center;
   color: var(--color-white);
+  overflow: hidden;
 }
 
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(135deg, rgba(39, 53, 40, 0.74), rgba(88, 42, 54, 0.56)),
-    url('../fotos/portada.png') center/cover no-repeat;
+  background: linear-gradient(
+    120deg,
+    #f8dbe1,
+    #f6e0c8,
+    #fff1ba,
+    #e8f4c9,
+    #ccebd8,
+    #c9edf1,
+    #d5e7fb,
+    #e5ddfa,
+    #f4d7ef,
+    #ffd6dc,
+    #ffe1cf,
+    #fbefc1,
+    #dff2c7,
+    #c8eadf,
+    #c6eef4,
+    #d1e4fb,
+    #dfd7f7,
+    #efd4ec,
+    #f8d7d2,
+    #f6e6c7,
+    #e9f0c8,
+    #d1ead1
+  );
+  background-size: 500% 500%;
+  animation: heroPastelFlow 24s ease-in-out infinite;
   z-index: 0;
 }
 
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, rgba(255, 244, 238, 0.1) 0%, rgba(29, 26, 24, 0.42) 100%);
+  background:
+    linear-gradient(rgba(34, 39, 34, 0.34), rgba(34, 29, 32, 0.48)),
+    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.08) 0%, rgba(29, 26, 24, 0.28) 100%);
   z-index: 1;
+}
+
+@keyframes heroPastelFlow {
+  0% { background-position: 0% 50%; }
+  5% { background-position: 12% 62%; }
+  10% { background-position: 25% 75%; }
+  15% { background-position: 40% 85%; }
+  20% { background-position: 58% 78%; }
+  25% { background-position: 72% 65%; }
+  30% { background-position: 88% 55%; }
+  35% { background-position: 100% 42%; }
+  40% { background-position: 85% 28%; }
+  45% { background-position: 70% 18%; }
+  50% { background-position: 52% 12%; }
+  55% { background-position: 35% 20%; }
+  60% { background-position: 18% 32%; }
+  65% { background-position: 6% 48%; }
+  70% { background-position: 15% 68%; }
+  75% { background-position: 32% 90%; }
+  80% { background-position: 55% 100%; }
+  85% { background-position: 78% 84%; }
+  90% { background-position: 96% 64%; }
+  95% { background-position: 46% 34%; }
+  100% { background-position: 0% 50%; }
 }
 
 .hero__content {
