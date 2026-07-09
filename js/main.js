@@ -4,13 +4,19 @@ const nav = document.querySelector('.nav');
 const navLinks = document.querySelectorAll('.nav__link');
 const catalogoGrid = document.querySelector('#catalogoGrid');
 const lightbox = document.querySelector('#lightbox');
+const lightboxContent = document.querySelector('.lightbox__content');
 const lightboxImage = document.querySelector('.lightbox__image');
 const lightboxClose = document.querySelector('.lightbox__close');
 const lightboxWhatsapp = document.querySelector('#lightboxWhatsapp');
+const lightboxNumber = document.querySelector('#lightboxNumber');
 
 const WHATSAPP_NUMBER = '50231362177';
 const CATALOG_TOTAL = 25;
 let lastFocusedElement = null;
+let currentLightboxNumber = 1;
+let swipeStartX = 0;
+let swipeStartY = 0;
+let isSwiping = false;
 
 const closeMobileMenu = () => {
   if (!nav || !navToggle) return;
@@ -48,17 +54,42 @@ const createWhatsappUrl = (number) => {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 };
 
-const openLightbox = (number, imageSrc, imageAlt, triggerElement) => {
+const normalizeCatalogNumber = (number) => {
+  if (number < 1) return CATALOG_TOTAL;
+  if (number > CATALOG_TOTAL) return 1;
+  return number;
+};
+
+const getCatalogImageSrc = (number) => `./fotos/${number}.png`;
+
+const updateLightboxImage = (number) => {
+  if (!lightboxImage || !lightboxWhatsapp || !lightboxNumber) return;
+
+  currentLightboxNumber = normalizeCatalogNumber(number);
+  const imageSrc = getCatalogImageSrc(currentLightboxNumber);
+  const imageAlt = `Ramo floral #${currentLightboxNumber}`;
+
+  lightboxImage.src = imageSrc;
+  lightboxImage.alt = imageAlt;
+  lightboxNumber.textContent = `#${currentLightboxNumber}`;
+  lightboxWhatsapp.href = createWhatsappUrl(currentLightboxNumber);
+};
+
+const openLightbox = (number, triggerElement) => {
   if (!lightbox || !lightboxImage || !lightboxWhatsapp) return;
 
   lastFocusedElement = triggerElement;
-  lightboxImage.src = imageSrc;
-  lightboxImage.alt = imageAlt;
-  lightboxWhatsapp.href = createWhatsappUrl(number);
+  updateLightboxImage(number);
   lightbox.classList.add('is-open');
   lightbox.setAttribute('aria-hidden', 'false');
   document.body.classList.add('lightbox-open');
   lightboxClose?.focus();
+};
+
+const navigateLightbox = (direction) => {
+  if (!lightbox?.classList.contains('is-open')) return;
+
+  updateLightboxImage(currentLightboxNumber + direction);
 };
 
 const closeLightbox = () => {
@@ -88,7 +119,7 @@ const renderCatalog = () => {
   for (let number = 1; number <= CATALOG_TOTAL; number += 1) {
     const button = document.createElement('button');
     const image = document.createElement('img');
-    const src = `./fotos/${number}.png`;
+    const src = getCatalogImageSrc(number);
     const alt = `Ramo floral #${number}`;
 
     button.type = 'button';
@@ -101,7 +132,7 @@ const renderCatalog = () => {
     image.loading = 'lazy';
 
     button.appendChild(image);
-    button.addEventListener('click', () => openLightbox(number, src, alt, button));
+    button.addEventListener('click', () => openLightbox(number, button));
     fragment.appendChild(button);
   }
 
@@ -133,9 +164,46 @@ lightbox?.addEventListener('click', (event) => {
   }
 });
 
+lightboxContent?.addEventListener('pointerdown', (event) => {
+  if (event.target.closest('a, button')) return;
+  if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+  swipeStartX = event.clientX;
+  swipeStartY = event.clientY;
+  isSwiping = true;
+});
+
+lightboxContent?.addEventListener('pointerup', (event) => {
+  if (!isSwiping) return;
+
+  const swipeDistanceX = event.clientX - swipeStartX;
+  const swipeDistanceY = event.clientY - swipeStartY;
+  const isHorizontalSwipe = Math.abs(swipeDistanceX) > 45 && Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY) * 1.2;
+
+  if (isHorizontalSwipe) {
+    navigateLightbox(swipeDistanceX < 0 ? 1 : -1);
+  }
+
+  isSwiping = false;
+});
+
+lightboxContent?.addEventListener('pointercancel', () => {
+  isSwiping = false;
+});
+
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && lightbox?.classList.contains('is-open')) {
+  if (!lightbox?.classList.contains('is-open')) return;
+
+  if (event.key === 'Escape') {
     closeLightbox();
+  }
+
+  if (event.key === 'ArrowLeft') {
+    navigateLightbox(-1);
+  }
+
+  if (event.key === 'ArrowRight') {
+    navigateLightbox(1);
   }
 });
 
